@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { RequestCreateBook, ResponseCreateBook } from './dto';
+import {
+  RequestCreateBook,
+  ResponseCreateBook,
+  ResponseDeleteBook,
+} from './dto';
 import { BooksRepository } from '../repository/books.repository';
 
 @Injectable()
@@ -19,6 +23,18 @@ export class BooksService {
       console.log(error);
       return new ResponseCreateBook(
         '데이터를 저장하는 중 오류가 발생했습니다.',
+      );
+    }
+  }
+
+  async deleteBook(id: number): Promise<any> {
+    try {
+      await this.booksRepository.delete(id);
+      return new ResponseDeleteBook('데이터가 삭제되었습니다.');
+    } catch (error) {
+      console.log(error);
+      return new ResponseDeleteBook(
+        '데이터를 삭제하는 중 오류가 발생했습니다.',
       );
     }
   }
