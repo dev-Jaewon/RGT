@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './configs/database.module';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
-    DatabaseModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
+    BooksModule,
   ],
   controllers: [],
   providers: [],
