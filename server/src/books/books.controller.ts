@@ -1,8 +1,19 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { BooksService } from './books.service';
 import { RequestCreateBook } from './dto';
 import { ResponseUpdateBook } from './dto/ResponseUpdateBook';
 import { RequestUpdateBook } from './dto/RequestUpdateBook';
+import { ResponseGetBook } from './dto/ReponseGetBook';
+import { RequestGetBook } from './dto/RequestGetBook';
 
 @Controller('/api/books')
 export class BooksController {
@@ -24,5 +35,10 @@ export class BooksController {
     @Body() body: RequestUpdateBook,
   ): Promise<ResponseUpdateBook> {
     return await this.booksService.updateBook(id, body);
+  }
+
+  @Get()
+  async getBooks(@Query() query: RequestGetBook): Promise<ResponseGetBook> {
+    return await this.booksService.getBooks(query);
   }
 }
