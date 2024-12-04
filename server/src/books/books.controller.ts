@@ -9,24 +9,30 @@ import {
   Query,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { RequestCreateBook } from './dto';
-import { ResponseUpdateBook } from './dto/ResponseUpdateBook';
-import { RequestUpdateBook } from './dto/RequestUpdateBook';
-import { ResponseGetBook } from './dto/ReponseGetBook';
-import { RequestGetBook } from './dto/RequestGetBook';
+import {
+  RequestCreateBook,
+  ResponseDeleteBook,
+  ResponseUpdateBook,
+  ResponseCreateBook,
+  RequestUpdateBook,
+  ResponseGetBook,
+  RequestGetBooks,
+} from './dto';
 
 @Controller('/api/books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  async createBook(@Body() body: RequestCreateBook): Promise<any> {
+  async createBook(
+    @Body() body: RequestCreateBook,
+  ): Promise<ResponseCreateBook> {
     return await this.booksService.createBook(body);
   }
 
   @Delete(':id')
-  async deleteBook(@Param('id') id: number): Promise<void> {
-    await this.booksService.deleteBook(id);
+  async deleteBook(@Param('id') id: number): Promise<ResponseDeleteBook> {
+    return await this.booksService.deleteBook(id);
   }
 
   @Put(':id')
@@ -38,7 +44,7 @@ export class BooksController {
   }
 
   @Get()
-  async getBooks(@Query() query: RequestGetBook): Promise<ResponseGetBook> {
+  async getBooks(@Query() query: RequestGetBooks): Promise<ResponseGetBook> {
     return await this.booksService.getBooks(query);
   }
 }
