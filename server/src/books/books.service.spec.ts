@@ -53,4 +53,17 @@ describe('BooksService Test', () => {
 
     expect(result.message).toBe('데이터를 확인해주세요.');
   });
+
+  it('should be delete book', async () => {
+    const body: RequestCreateBook = {
+      title: 'New test book',
+      author: 'Test author',
+    };
+
+    const preResult = await service.createBook(body);
+
+    const result = await service.deleteBook(preResult.data?.id);
+
+    expect(result.message).toBe('데이터가 삭제되었습니다.');
+  });
 });
