@@ -7,6 +7,7 @@ import { BooksRepository } from '../repository/books.repository';
 import { databaseConfig } from '../config/database';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Books } from '../entity/books.entity';
+import { RequestUpdateBook } from './dto/RequestUpdateBook';
 
 describe('BooksService Test', () => {
   let service: BooksService;
@@ -65,5 +66,25 @@ describe('BooksService Test', () => {
     const result = await service.deleteBook(preResult.data?.id);
 
     expect(result.message).toBe('데이터가 삭제되었습니다.');
+  });
+
+  it('should be update book', async () => {
+    const preValue: RequestCreateBook = {
+      title: 'New test book',
+      author: 'Test author',
+    };
+
+    const preResult = await service.createBook(preValue);
+
+    const newValue: RequestUpdateBook = {
+      title: 'Update test book',
+      author: 'Update test author',
+    };
+
+    const result = await service.updateBook(preResult.data?.id, newValue);
+
+    expect(result.message).toBe('데이터가 수정되었습니다.');
+
+    await repository.delete({ id: preResult.data?.id });
   });
 });

@@ -5,6 +5,8 @@ import {
   ResponseDeleteBook,
 } from './dto';
 import { BooksRepository } from '../repository/books.repository';
+import { RequestUpdateBook } from './dto/RequestUpdateBook';
+import { ResponseUpdateBook } from './dto/ResponseUpdateBook';
 
 @Injectable()
 export class BooksService {
@@ -35,6 +37,26 @@ export class BooksService {
       console.log(error);
       return new ResponseDeleteBook(
         '데이터를 삭제하는 중 오류가 발생했습니다.',
+      );
+    }
+  }
+
+  async updateBook(
+    id: number,
+    body: RequestUpdateBook,
+  ): Promise<ResponseUpdateBook> {
+    if (body.title === '' || body.author === '') {
+      return new ResponseUpdateBook('데이터를 확인해주세요.');
+    }
+
+    try {
+      await this.booksRepository.update(id, body);
+
+      return new ResponseUpdateBook('데이터가 수정되었습니다.');
+    } catch (error) {
+      console.log(error);
+      return new ResponseUpdateBook(
+        '데이터를 수정하는 중 오류가 발생했습니다.',
       );
     }
   }
