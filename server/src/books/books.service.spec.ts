@@ -87,4 +87,19 @@ describe('BooksService Test', () => {
 
     await repository.delete({ id: preResult.data?.id });
   });
+
+  it('should be get books', async () => {
+    const result = await service.getBooks({ page: 1, size: 10 });
+
+    expect(result.message).toBe('데이터를 조회했습니다.');
+    expect(result.data).not.toBeNull();
+    expect(result.total).not.toBeNull();
+    expect(result.lastPage).not.toBeNull();
+  });
+
+  it('should be return error message', async () => {
+    const result = await service.getBooks({ page: 0, size: 0 });
+
+    expect(result.message).toBe('데이터를 확인해주세요.');
+  });
 });

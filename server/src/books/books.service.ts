@@ -3,10 +3,13 @@ import {
   RequestCreateBook,
   ResponseCreateBook,
   ResponseDeleteBook,
+  ResponseGetBook,
 } from './dto';
 import { BooksRepository } from '../repository/books.repository';
 import { RequestUpdateBook } from './dto/RequestUpdateBook';
 import { ResponseUpdateBook } from './dto/ResponseUpdateBook';
+import { RequestGetBook } from './dto/RequestGetBook';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class BooksService {
@@ -58,6 +61,40 @@ export class BooksService {
       return new ResponseUpdateBook(
         '데이터를 수정하는 중 오류가 발생했습니다.',
       );
+    }
+  }
+
+  async getBooks(query: RequestGetBook): Promise<ResponseGetBook> {
+    const { page, size, title, author } = query;
+
+    if (!page || !size) {
+      return new ResponseGetBook('데이터를 확인해주세요.');
+    }
+
+    try {
+      const [data, total] = await this.booksRepository.findAndCount({
+        where: {
+          title: title ? Like(`%${title}%`) : undefined,
+          author: author ? Like(`%${author}%`) : undefined,
+        },
+        take: size,
+        skip: (page - 1) * size,
+        order: {
+          id: 'DESC',
+        },
+      });
+
+      const lastPage = Math.ceil(total / size);
+
+      return new ResponseGetBook(
+        '데이터를 조회했습니다.',
+        data,
+        total,
+        lastPage,
+      );
+    } catch (error) {
+      console.log(error);
+      return new ResponseGetBook('데이터를 조회하는 중 오류가 발생했습니다.');
     }
   }
 }
